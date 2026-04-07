@@ -100,4 +100,4 @@
 
 ## ⭐ Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=RunaYy04/endfield-calc&type=Date)](https://star-history.com/#RunaYy04/endfield-calc&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=RunaYy04/endfield-dmg-calc&type=Date)](https://star-history.com/#RunaYy04/endfield-dmg-calc&Date)
