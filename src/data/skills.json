@@ -2253,7 +2253,7 @@
     "name": "大招沸血dot（燃",
     "multiplier": 0.36,
     "extraCritRate": 0,
-    "extraCritDamage": 0.6,
+    "extraCritDamage": 0,
     "isStagger": false,
     "elemType": "灼热加成",
     "skillType": "无",
