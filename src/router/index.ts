@@ -17,6 +17,11 @@ const router = createRouter({
       path: '/add-buff',
       name: 'add-buff',
       component: () => import('../views/AddBuffView.vue')
+    },
+    {
+      path: '/add-skill',
+      name: 'add-skill',
+      component: () => import('../views/AddSkillView.vue')
     }
   ]
 })

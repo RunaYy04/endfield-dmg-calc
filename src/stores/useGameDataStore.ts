@@ -33,6 +33,9 @@ export const useGameDataStore = defineStore('gameData', {
     },
     addBuff(newBuff: Buff) {
       this.availableBuffs.push(newBuff)
+    },
+    addSkill(newSkill: Skill) {
+      this.skills.push(newSkill)
     }
   },
   persist: true
