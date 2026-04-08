@@ -2256,7 +2256,7 @@
     "extraCritDamage": 0.6,
     "isStagger": false,
     "elemType": "灼热加成",
-    "skillType": "终结技加成",
+    "skillType": "无",
     "physBonus": 0,
     "thermalBonus": 0,
     "electroBonus": 0,

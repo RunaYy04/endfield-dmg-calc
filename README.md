@@ -29,7 +29,7 @@
 
 ## 交流与反馈
 
-欢迎在 GitHub Issues 中提出您的建议、反馈 Bug，或是提供新的干员/装备数据推导公式。
+欢迎在 GitHub Issues 中提出您的建议。
 
 ## Demo
 
@@ -72,7 +72,7 @@
 
 本项目为纯前端项目，可轻松部署在任意静态托管平台上。
 
-### Vercel / Netlify 部署
+### [Vercel](https://vercel.com/) / [Netlify](https://www.netlify.com/) 部署
 
 1. 点击本仓库右上角的 `Fork`，复制本仓库到你的 `GitHub` 账号
 2. 在 Vercel / Netlify 等平台中导入该仓库
@@ -98,6 +98,6 @@
 
 - 本项目基于 [MIT License](https://opensource.org/licenses/MIT) 许可进行开源
 
-## ⭐ Star History
+## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=RunaYy04/endfield-dmg-calc&type=Date)](https://star-history.com/#RunaYy04/endfield-dmg-calc&Date)
