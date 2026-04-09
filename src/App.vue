@@ -34,11 +34,13 @@
         <p>本站为《明日方舟：终末地》二创作品，<br class="desktop-br">网站所涉及数据其版权属于 上海鹰角网络科技有限公司。</p>
       </div>
     </footer>
+
+    <Analytics />
   </div>
 </template>
 
 <script setup lang="ts">
-
+import { Analytics } from '@vercel/analytics/vue'
 </script>
 
 <style scoped>
