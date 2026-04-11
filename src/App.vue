@@ -27,7 +27,7 @@
 
     <footer class="app-footer">
       <div class="footer-side left-side">
-        <p>数据及逻辑来源 <a href="https://space.bilibili.com/112745" target="_blank" rel="noopener noreferrer">@片雲</a></p>
+        <p>数据及逻辑来源 <a href="https://space.bilibili.com/112745" target="_blank" rel="noopener noreferrer">@片雲</a><br>项目地址: <a href="https://github.com/RunaYy04/endfield-dmg-calc" target="_blank" rel="noopener noreferrer">https://github.com/RunaYy04/endfield-dmg-calc</a></p>
       </div>
       <div class="footer-side right-side">
         <p><strong>免责声明</strong></p>
