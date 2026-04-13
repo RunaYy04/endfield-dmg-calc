@@ -25,6 +25,9 @@ export const useGameDataStore = defineStore('gameData', {
   }),
 
   actions: {
+    addOperator(newOperator: Operator) {
+      this.operators.push(newOperator)
+    },
     addWeapon(newWeapon: Equipment) {
       this.weapons.push(newWeapon)
     },
@@ -45,6 +48,9 @@ export const useGameDataStore = defineStore('gameData', {
     },
     removeWeapon(name: string) {
       this.weapons = this.weapons.filter(item => item.name !== name)
+    },
+    removeOperator(name: string) {
+      this.operators = this.operators.filter(item => item.name !== name)
     },
     removeArmor(name: string) {
       this.armors = this.armors.filter(item => item.name !== name)

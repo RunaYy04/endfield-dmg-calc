@@ -74,6 +74,15 @@ getters: {
         })
       })
     },
+    syncOperatorSelection(removedName: string, fallback: Operator | undefined) {
+      if (!fallback) return
+
+      this.timelines.forEach((timeline) => {
+        if (timeline.selectedOperator?.name === removedName) {
+          timeline.selectedOperator = fallback
+        }
+      })
+    },
 
     addTimeline() {
       const gameData = useGameDataStore()
@@ -173,6 +182,10 @@ getters: {
     handleSkillRemoved(removedName: string) {
       const gameData = useGameDataStore()
       this.syncSkillSelection(removedName, gameData.skills[0])
+    },
+    handleOperatorRemoved(removedName: string) {
+      const gameData = useGameDataStore()
+      this.syncOperatorSelection(removedName, gameData.operators[0])
     },
     handleBuffRemoved(removedName: string) {
       this.timelines.forEach((timeline) => {

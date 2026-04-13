@@ -9,6 +9,11 @@ const router = createRouter({
       component: () => import('../views/CalculatorView.vue')
     },
     {
+      path: '/add-operator',
+      name: 'add-operator',
+      component: () => import('../views/AddOperatorView.vue')
+    },
+    {
       path: '/add-equipment',
       name: 'add-equipment',
       component: () => import('../views/AddEquipmentView.vue')

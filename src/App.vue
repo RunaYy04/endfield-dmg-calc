@@ -8,6 +8,7 @@
 
         <nav class="nav-links">
           <router-link to="/" class="nav-item">伤害计算器</router-link>
+          <router-link to="/add-operator" class="nav-item">添加角色</router-link>
           <router-link to="/add-equipment" class="nav-item">添加装备</router-link>
           <router-link to="/add-buff" class="nav-item">添加增益</router-link>
           <router-link to="/add-skill" class="nav-item">添加技能</router-link>
