@@ -55,18 +55,51 @@
           <div v-if="successMessage" class="success-msg">{{ successMessage }}</div>
         </transition>
       </div>
+
+      <n-divider dashed>
+        <span class="divider-text">当前装备</span>
+      </n-divider>
+
+      <div class="manage-section">
+        <div class="manage-header">
+          <span class="manage-count">{{ currentTypeLabel }}共 {{ currentEquipmentList.length }} 件</span>
+          <span class="manage-tip">删除后，计算器中正在使用的同类装备会自动切到剩余选项。</span>
+        </div>
+
+        <div class="manage-list">
+          <div v-for="equipment in currentEquipmentList" :key="equipment.name" class="manage-item">
+            <div class="manage-item-main">
+              <div class="manage-item-title">{{ equipment.name }}</div>
+              <div class="manage-item-meta">
+                <span>基础攻击 {{ equipment.baseAttack }}</span>
+                <span>暴击率 {{ (equipment.critRate * 100).toFixed(1) }}%</span>
+                <span>暴伤 {{ (equipment.critDamage * 100).toFixed(1) }}%</span>
+              </div>
+            </div>
+            <n-button size="small" secondary type="error" :disabled="currentEquipmentList.length <= 1"
+              @click="deleteEquipment(equipment.name)">
+              删除
+            </n-button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { storeToRefs } from 'pinia'
 import { NInput, NInputNumber, NSelect, NGrid, NGridItem, NDivider, NButton } from 'naive-ui'
 import { useGameDataStore } from '../stores/useGameDataStore'
+import { useCalculatorStore } from '../stores/useCalculatorStore'
 import type { Equipment } from '../types'
 
 const gameData = useGameDataStore()
+const calcStore = useCalculatorStore()
+const { weapons, armors, gloves, accessories } = storeToRefs(gameData)
 const successMessage = ref('')
+let successTimer: ReturnType<typeof setTimeout> | null = null
 
 // 定义 isPercent 标记
 interface FieldConfig {
@@ -134,6 +167,44 @@ const initialFormState = {
 
 const formData = ref<any>({ ...initialFormState })
 
+const currentEquipmentList = computed(() => {
+  switch (formData.value.type) {
+    case 'weapon':
+      return weapons.value
+    case 'armor':
+      return armors.value
+    case 'glove':
+      return gloves.value
+    case 'accessory':
+      return accessories.value
+    default:
+      return weapons.value
+  }
+})
+
+const currentTypeLabel = computed(() => {
+  const labels: Record<string, string> = {
+    weapon: '武器',
+    armor: '护甲',
+    glove: '护手',
+    accessory: '配件'
+  }
+
+  return labels[formData.value.type] ?? '装备'
+})
+
+const showSuccessMessage = (message: string) => {
+  successMessage.value = message
+
+  if (successTimer) {
+    clearTimeout(successTimer)
+  }
+
+  successTimer = setTimeout(() => {
+    successMessage.value = ''
+  }, 3000)
+}
+
 const submitEquipment = () => {
   if (!formData.value.name) {
     alert('请输入装备名称！')
@@ -146,16 +217,37 @@ const submitEquipment = () => {
   switch (formData.value.type) {
     case 'weapon': gameData.addWeapon(newEquipment as Equipment); break;
     case 'armor': gameData.addArmor(newEquipment as Equipment); break;
-    case 'glove': gameData.gloves.push(newEquipment as Equipment); break;
-    case 'accessory': gameData.accessories.push(newEquipment as Equipment); break;
+    case 'glove': gameData.addGlove(newEquipment as Equipment); break;
+    case 'accessory': gameData.addAccessory(newEquipment as Equipment); break;
   }
 
-  successMessage.value = `装备 [${newEquipment.name}] 锻造成功！`
+  showSuccessMessage(`装备 [${newEquipment.name}] 锻造成功！`)
+  formData.value = { ...initialFormState, type: formData.value.type }
+}
 
-  setTimeout(() => {
-    successMessage.value = ''
-    formData.value.name = ''
-  }, 3000)
+const deleteEquipment = (name: string) => {
+  if (currentEquipmentList.value.length <= 1) {
+    alert(`至少保留一件${currentTypeLabel.value}，避免计算器失去可选项。`)
+    return
+  }
+
+  switch (formData.value.type) {
+    case 'weapon':
+      gameData.removeWeapon(name)
+      break
+    case 'armor':
+      gameData.removeArmor(name)
+      break
+    case 'glove':
+      gameData.removeGlove(name)
+      break
+    case 'accessory':
+      gameData.removeAccessory(name)
+      break
+  }
+
+  calcStore.handleEquipmentRemoved(formData.value.type, name)
+  showSuccessMessage(`${currentTypeLabel.value} [${name}] 已删除！`)
 }
 </script>
 
@@ -250,6 +342,69 @@ const submitEquipment = () => {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.manage-section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.manage-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  color: #64748b;
+  font-size: 0.9rem;
+  flex-wrap: wrap;
+}
+
+.manage-count {
+  font-weight: 700;
+  color: #334155;
+}
+
+.manage-tip {
+  color: #94a3b8;
+}
+
+.manage-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 360px;
+  overflow: auto;
+}
+
+.manage-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.manage-item-main {
+  min-width: 0;
+}
+
+.manage-item-title {
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 4px;
+  word-break: break-all;
+}
+
+.manage-item-meta {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  color: #64748b;
+  font-size: 0.85rem;
 }
 
 .fade-enter-active,

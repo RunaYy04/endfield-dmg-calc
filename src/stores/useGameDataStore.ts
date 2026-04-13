@@ -31,11 +31,35 @@ export const useGameDataStore = defineStore('gameData', {
     addArmor(newArmor: Equipment) {
       this.armors.push(newArmor)
     },
+    addGlove(newGlove: Equipment) {
+      this.gloves.push(newGlove)
+    },
+    addAccessory(newAccessory: Equipment) {
+      this.accessories.push(newAccessory)
+    },
     addBuff(newBuff: Buff) {
       this.availableBuffs.push(newBuff)
     },
     addSkill(newSkill: Skill) {
       this.skills.push(newSkill)
+    },
+    removeWeapon(name: string) {
+      this.weapons = this.weapons.filter(item => item.name !== name)
+    },
+    removeArmor(name: string) {
+      this.armors = this.armors.filter(item => item.name !== name)
+    },
+    removeGlove(name: string) {
+      this.gloves = this.gloves.filter(item => item.name !== name)
+    },
+    removeAccessory(name: string) {
+      this.accessories = this.accessories.filter(item => item.name !== name)
+    },
+    removeBuff(name: string) {
+      this.availableBuffs = this.availableBuffs.filter(item => item.name !== name)
+    },
+    removeSkill(name: string) {
+      this.skills = this.skills.filter(item => item.name !== name)
     }
   },
   persist: true

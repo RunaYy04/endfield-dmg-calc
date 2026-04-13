@@ -62,18 +62,49 @@
           <div v-if="successMessage" class="success-msg">{{ successMessage }}</div>
         </transition>
       </div>
+
+      <n-divider dashed>
+        <span class="divider-text">当前技能</span>
+      </n-divider>
+
+      <div class="manage-section">
+        <div class="manage-header">
+          <span class="manage-count">共 {{ skills.length }} 个技能</span>
+          <span class="manage-tip">删除后，排轴中正在使用的技能会自动切换到剩余技能。</span>
+        </div>
+
+        <div class="manage-list">
+          <div v-for="skill in skills" :key="skill.name" class="manage-item">
+            <div class="manage-item-main">
+              <div class="manage-item-title">{{ skill.name }}</div>
+              <div class="manage-item-meta">
+                <span>{{ skill.skillType }}</span>
+                <span>{{ skill.elemType }}</span>
+              </div>
+            </div>
+            <n-button size="small" secondary type="error" :disabled="skills.length <= 1" @click="deleteSkill(skill.name)">
+              删除
+            </n-button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { storeToRefs } from 'pinia'
 import { NInput, NInputNumber, NGrid, NGridItem, NDivider, NButton, NSelect } from 'naive-ui'
 import { useGameDataStore } from '../stores/useGameDataStore'
+import { useCalculatorStore } from '../stores/useCalculatorStore'
 import type { Skill } from '../types'
 
 const gameData = useGameDataStore()
+const calcStore = useCalculatorStore()
+const { skills } = storeToRefs(gameData)
 const successMessage = ref('')
+let successTimer: ReturnType<typeof setTimeout> | null = null
 
 type SkillPercentKey =
   | 'extraCritRate'
@@ -154,6 +185,18 @@ const initialFormState: Skill = {
 
 const formData = ref<Skill>({ ...initialFormState })
 
+const showSuccessMessage = (message: string) => {
+  successMessage.value = message
+
+  if (successTimer) {
+    clearTimeout(successTimer)
+  }
+
+  successTimer = setTimeout(() => {
+    successMessage.value = ''
+  }, 3000)
+}
+
 const submitSkill = () => {
   if (!formData.value.name) {
     alert('请输入技能名称！')
@@ -162,13 +205,19 @@ const submitSkill = () => {
 
   const newSkill = { ...formData.value }
   gameData.addSkill(newSkill)
+  showSuccessMessage(`技能 [${newSkill.name}] 已添加！`)
+  formData.value = { ...initialFormState }
+}
 
-  successMessage.value = `技能 [${newSkill.name}] 已添加！`
+const deleteSkill = (name: string) => {
+  if (skills.value.length <= 1) {
+    alert('至少保留一个技能，避免动作序列失去可选项。')
+    return
+  }
 
-  setTimeout(() => {
-    successMessage.value = ''
-    formData.value.name = ''
-  }, 3000)
+  gameData.removeSkill(name)
+  calcStore.handleSkillRemoved(name)
+  showSuccessMessage(`技能 [${name}] 已删除！`)
 }
 </script>
 
@@ -248,6 +297,69 @@ const submitSkill = () => {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.manage-section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.manage-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  color: #64748b;
+  font-size: 0.9rem;
+  flex-wrap: wrap;
+}
+
+.manage-count {
+  font-weight: 700;
+  color: #334155;
+}
+
+.manage-tip {
+  color: #94a3b8;
+}
+
+.manage-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 360px;
+  overflow: auto;
+}
+
+.manage-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.manage-item-main {
+  min-width: 0;
+}
+
+.manage-item-title {
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 4px;
+  word-break: break-all;
+}
+
+.manage-item-meta {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  color: #64748b;
+  font-size: 0.85rem;
 }
 
 .fade-enter-active,

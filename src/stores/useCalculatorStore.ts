@@ -1,7 +1,7 @@
 // src/stores/useCalculatorStore.ts
 import { defineStore } from 'pinia'
 import { useGameDataStore } from './useGameDataStore'
-import type { Operator, Equipment, SetEffect, Rotation, Timeline } from '../types'
+import type { Operator, Equipment, SetEffect, Rotation, Timeline, Skill } from '../types'
 
 export const useCalculatorStore = defineStore('calculator', {
   state: () => {
@@ -50,6 +50,30 @@ getters: {
 
   actions: {
     generateId() { return Date.now().toString() + Math.random().toString(36).substring(2) },
+    syncEquipmentSelection(
+      key: 'selectedWeapon' | 'selectedArmor' | 'selectedGlove' | 'selectedAccessory1' | 'selectedAccessory2' | 'selectedFood',
+      removedName: string,
+      fallback: Equipment | undefined
+    ) {
+      if (!fallback) return
+
+      this.timelines.forEach((timeline) => {
+        if (timeline[key]?.name === removedName) {
+          timeline[key] = fallback
+        }
+      })
+    },
+    syncSkillSelection(removedName: string, fallback: Skill | undefined) {
+      if (!fallback) return
+
+      this.timelines.forEach((timeline) => {
+        timeline.rotation.forEach((action) => {
+          if (action.skill?.name === removedName) {
+            action.skill = fallback
+          }
+        })
+      })
+    },
 
     addTimeline() {
       const gameData = useGameDataStore()
@@ -144,6 +168,41 @@ getters: {
 
     toggleBuffList(actionId: string) {
       this.actionBuffListExpanded[actionId] = !this.actionBuffListExpanded[actionId]
+    },
+
+    handleSkillRemoved(removedName: string) {
+      const gameData = useGameDataStore()
+      this.syncSkillSelection(removedName, gameData.skills[0])
+    },
+    handleBuffRemoved(removedName: string) {
+      this.timelines.forEach((timeline) => {
+        timeline.rotation.forEach((action) => {
+          action.activeBuffs = action.activeBuffs.filter((buff) => buff.name !== removedName)
+        })
+      })
+    },
+
+    handleEquipmentRemoved(
+      type: 'weapon' | 'armor' | 'glove' | 'accessory',
+      removedName: string
+    ) {
+      const gameData = useGameDataStore()
+
+      switch (type) {
+        case 'weapon':
+          this.syncEquipmentSelection('selectedWeapon', removedName, gameData.weapons[0])
+          break
+        case 'armor':
+          this.syncEquipmentSelection('selectedArmor', removedName, gameData.armors[0])
+          break
+        case 'glove':
+          this.syncEquipmentSelection('selectedGlove', removedName, gameData.gloves[0])
+          break
+        case 'accessory':
+          this.syncEquipmentSelection('selectedAccessory1', removedName, gameData.accessories[0])
+          this.syncEquipmentSelection('selectedAccessory2', removedName, gameData.accessories[0] ?? gameData.accessories[1])
+          break
+      }
     }
   },
   persist: true
