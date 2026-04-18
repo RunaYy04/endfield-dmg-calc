@@ -1,4 +1,5 @@
 <template>
+  <Analytics />
   <div class="app-layout">
     <transition name="notice-fade">
       <div
@@ -59,6 +60,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
+import { Analytics } from '@vercel/analytics/vue'
 
 const UPDATE_NOTICE_VERSION = 'update-notice-2026-04-18-zhuangfangyi'
 const UPDATE_NOTICE_STORAGE_KEY = 'endfield-dmg-calc:last-seen-update-notice'
