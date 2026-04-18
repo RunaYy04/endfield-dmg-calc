@@ -59,9 +59,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-
-const UPDATE_NOTICE_VERSION = 'update-notice-2026-04-18-zhuangfangyi'
-const UPDATE_NOTICE_STORAGE_KEY = 'endfield-dmg-calc:last-seen-update-notice'
+import { UPDATE_NOTICE_STORAGE_KEY, UPDATE_NOTICE_VERSION } from './constants/appVersion'
 
 const showUpdateNotice = ref(false)
 

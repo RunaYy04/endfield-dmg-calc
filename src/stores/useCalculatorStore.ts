@@ -1,33 +1,33 @@
 // src/stores/useCalculatorStore.ts
 import { defineStore } from 'pinia'
 import { useGameDataStore } from './useGameDataStore'
-import type { Operator, Equipment, SetEffect, Rotation, Timeline, Skill } from '../types'
+import type { Operator, Equipment, SetEffect, Rotation, Timeline, Skill, Buff } from '../types'
+
+const createDefaultBuild = (gameData: ReturnType<typeof useGameDataStore>) => ({
+  selectedOperator: gameData.operators[0],
+  selectedWeapon: gameData.weapons[0],
+  selectedArmor: gameData.armors[0],
+  selectedGlove: gameData.gloves[0],
+  selectedAccessory1: gameData.accessories[0],
+  selectedAccessory2: gameData.accessories[1] ?? gameData.accessories[0],
+  selectedSet: gameData.sets[0] || {} as SetEffect,
+  selectedFood: gameData.foods[0],
+})
+
+const createDefaultTimeline = (gameData: ReturnType<typeof useGameDataStore>, id: string): Timeline => ({
+  id,
+  name: '默认排轴',
+  ...createDefaultBuild(gameData),
+  rotation: []
+})
 
 export const useCalculatorStore = defineStore('calculator', {
   state: () => {
     const gameData = useGameDataStore()
     const defaultId = Date.now().toString()
-    
-    const getDefaultBuild = () => ({
-      selectedOperator: gameData.operators[0],
-      selectedWeapon: gameData.weapons[0],
-      selectedArmor: gameData.armors[0],
-      selectedGlove: gameData.gloves[0],
-      selectedAccessory1: gameData.accessories[0],
-      selectedAccessory2: gameData.accessories[1],
-      selectedSet: gameData.sets[0] || {} as SetEffect,
-      selectedFood: gameData.foods[0],
-    })
 
     return {
-      timelines: [
-        {
-          id: defaultId,
-          name: '默认排轴',
-          ...getDefaultBuild(),
-          rotation: [] as Rotation
-        }
-      ] as Timeline[],
+      timelines: [createDefaultTimeline(gameData, defaultId)] as Timeline[],
       activeTimelineId: defaultId,
       actionBuffListExpanded: {} as Record<string, boolean>
     }
@@ -50,6 +50,9 @@ getters: {
 
   actions: {
     generateId() { return Date.now().toString() + Math.random().toString(36).substring(2) },
+    findByName<T extends { name: string }>(items: T[], name: string | undefined, fallback?: T) {
+      return items.find((item) => item.name === name) ?? fallback
+    },
     syncEquipmentSelection(
       key: 'selectedWeapon' | 'selectedArmor' | 'selectedGlove' | 'selectedAccessory1' | 'selectedAccessory2' | 'selectedFood',
       removedName: string,
@@ -83,6 +86,75 @@ getters: {
         }
       })
     },
+    rebindToLatestGameData() {
+      const gameData = useGameDataStore()
+
+      if (this.timelines.length === 0) {
+        const newId = this.generateId()
+        this.timelines = [createDefaultTimeline(gameData, newId)]
+        this.activeTimelineId = newId
+      }
+
+      this.timelines.forEach((timeline) => {
+        timeline.selectedOperator = this.findByName(
+          gameData.operators,
+          timeline.selectedOperator?.name,
+          gameData.operators[0]
+        ) as Operator
+        timeline.selectedWeapon = this.findByName(
+          gameData.weapons,
+          timeline.selectedWeapon?.name,
+          gameData.weapons[0]
+        ) as Equipment
+        timeline.selectedArmor = this.findByName(
+          gameData.armors,
+          timeline.selectedArmor?.name,
+          gameData.armors[0]
+        ) as Equipment
+        timeline.selectedGlove = this.findByName(
+          gameData.gloves,
+          timeline.selectedGlove?.name,
+          gameData.gloves[0]
+        ) as Equipment
+        timeline.selectedAccessory1 = this.findByName(
+          gameData.accessories,
+          timeline.selectedAccessory1?.name,
+          gameData.accessories[0]
+        ) as Equipment
+        timeline.selectedAccessory2 = this.findByName(
+          gameData.accessories,
+          timeline.selectedAccessory2?.name,
+          gameData.accessories[1] ?? gameData.accessories[0]
+        ) as Equipment
+        timeline.selectedSet = this.findByName(
+          gameData.sets,
+          timeline.selectedSet?.name,
+          gameData.sets[0]
+        ) as SetEffect
+        timeline.selectedFood = this.findByName(
+          gameData.foods,
+          timeline.selectedFood?.name,
+          gameData.foods[0]
+        ) as Equipment
+
+        timeline.rotation.forEach((action) => {
+          action.skill = this.findByName(
+            gameData.skills,
+            action.skill?.name,
+            gameData.skills[0]
+          ) as Skill
+
+          action.activeBuffs = action.activeBuffs
+            .map((buff) => this.findByName(gameData.availableBuffs, buff.name))
+            .filter((buff): buff is Buff => !!buff)
+        })
+      })
+
+      const hasActiveTimeline = this.timelines.some((timeline) => timeline.id === this.activeTimelineId)
+      if (!hasActiveTimeline) {
+        this.activeTimelineId = this.timelines[0].id
+      }
+    },
 
     addTimeline() {
       const gameData = useGameDataStore()
@@ -90,14 +162,7 @@ getters: {
       this.timelines.push({
         id: newId,
         name: `新排轴 ${this.timelines.length + 1}`,
-        selectedOperator: gameData.operators[0],
-        selectedWeapon: gameData.weapons[0],
-        selectedArmor: gameData.armors[0],
-        selectedGlove: gameData.gloves[0],
-        selectedAccessory1: gameData.accessories[0],
-        selectedAccessory2: gameData.accessories[1],
-        selectedSet: gameData.sets[0] || {} as SetEffect,
-        selectedFood: gameData.foods[0],
+        ...createDefaultBuild(gameData),
         rotation: []
       })
       this.activeTimelineId = newId
