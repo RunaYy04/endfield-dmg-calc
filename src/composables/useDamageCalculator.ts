@@ -55,35 +55,48 @@ export function useDamageCalculator(inputs: CalculatorInputs) {
     )
   }
 
+//主能力板
 const totalStrength = computed(() => {
   return ('力量' === operator.value.mainAttributeTag)
     ? ((sumStaticAttribute('strength').value + sumStaticAttribute('mainAttributeFlat').value) * (1 + sumStaticAttribute('mainAttribute').value))
     : sumStaticAttribute('strength').value;
 })
-
-
 const totalAgility = computed(() => {
   return ('敏捷' === operator.value.mainAttributeTag)
     ? ((sumStaticAttribute('agility').value + sumStaticAttribute('mainAttributeFlat').value) * (1 + sumStaticAttribute('mainAttribute').value))
     : sumStaticAttribute('agility').value;
 })
-
-
-
 const totalIntelligence = computed(() => {
   return ('智识' === operator.value.mainAttributeTag)
     ? ((sumStaticAttribute('intelligence').value + sumStaticAttribute('mainAttributeFlat').value) * (1 + sumStaticAttribute('mainAttribute').value))
     : sumStaticAttribute('intelligence').value;
 })
-
-
 const totalWillpower = computed(() => {
   return ('意志' === operator.value.mainAttributeTag)
     ? ((sumStaticAttribute('willpower').value + sumStaticAttribute('mainAttributeFlat').value) * (1 + sumStaticAttribute('mainAttribute').value))
     : sumStaticAttribute('willpower').value;
 })
-
-
+//副能力板
+const totalSubStrength = computed(() => {
+  return ('力量' === operator.value.subAttributeTag)
+    ? ((sumStaticAttribute('strength').value + sumStaticAttribute('subAttributeFlat').value) * (1 + sumStaticAttribute('subAttribute').value))
+    : sumStaticAttribute('strength').value;
+})
+const totalSubAgility = computed(() => {
+  return ('敏捷' === operator.value.subAttributeTag)
+    ? ((sumStaticAttribute('agility').value + sumStaticAttribute('subAttributeFlat').value) * (1 + sumStaticAttribute('subAttribute').value))
+    : sumStaticAttribute('agility').value;
+})
+const totalSubIntelligence = computed(() => {
+  return ('智识' === operator.value.subAttributeTag)
+    ? ((sumStaticAttribute('intelligence').value + sumStaticAttribute('subAttributeFlat').value) * (1 + sumStaticAttribute('subAttribute').value))
+    : sumStaticAttribute('intelligence').value;
+})
+const totalSubWillpower = computed(() => {
+  return ('意志' === operator.value.subAttributeTag)
+    ? ((sumStaticAttribute('willpower').value + sumStaticAttribute('subAttributeFlat').value) * (1 + sumStaticAttribute('subAttribute').value))
+    : sumStaticAttribute('willpower').value;
+})
 
   const ifMain = (attrName: string | undefined) => {
     if (attrName == operator.value.mainAttributeTag) return true
@@ -102,10 +115,10 @@ const totalWillpower = computed(() => {
     return 0
   }
   const getSubVal = () => {
-    if (ifSub('力量')) return totalStrength.value
-    if (ifSub('敏捷')) return totalAgility.value
-    if (ifSub('智识')) return totalIntelligence.value
-    if (ifSub('意志')) return totalWillpower.value
+    if (ifSub('力量')) return totalSubStrength.value
+    if (ifSub('敏捷')) return totalSubAgility.value
+    if (ifSub('智识')) return totalSubIntelligence.value
+    if (ifSub('意志')) return totalSubWillpower.value
     return 0
   }
 
@@ -154,6 +167,7 @@ const totalWillpower = computed(() => {
       + (skill.skillType == '战技加成' ? sumStaticAttribute('skillBonus').value : 0)
       + (skill.skillType == '连携技加成' ? sumStaticAttribute('comboBonus').value : 0)
       + (skill.skillType == '终结技加成' ? sumStaticAttribute('ultimateBonus').value : 0);
+
 
     const currentVulnerability = sumStaticAttribute('vulnerability').value + sumBuff('vulnerability') + skill.vulnerability;
     const currentFragility = sumStaticAttribute('fragility').value + sumBuff('fragility') + skill.fragility;
@@ -243,6 +257,7 @@ const totalWillpower = computed(() => {
   return {
     // 静态面板数据
     totalStrength, totalAgility, totalIntelligence, totalWillpower,
+    totalSubStrength, totalSubAgility, totalSubIntelligence, totalSubWillpower,
     attributeBonus, stepA_BaseAttack, totalDefense,
 
 
