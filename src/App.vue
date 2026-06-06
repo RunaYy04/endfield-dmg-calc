@@ -10,8 +10,8 @@
       >
         <div class="update-notice-card">
           <p class="update-notice-tag">更新提示</p>
-          <h2 id="update-notice-title">更新了庄方宜的数据</h2>
-          <p class="update-notice-date">2026.4.18</p>
+          <h2 id="update-notice-title">更新了弭弗的数据</h2>
+          <p class="update-notice-date">2026.6.6</p>
           <button type="button" class="update-notice-button" @click="dismissUpdateNotice">
             我知道了
           </button>
