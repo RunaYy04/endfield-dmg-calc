@@ -1,4 +1,4 @@
-export const DATA_VERSION = '2026-04-18-zhuangfangyi'
+export const DATA_VERSION = '2026-06-06-mifu'
 
 export const UPDATE_NOTICE_VERSION = DATA_VERSION
 
