@@ -204,7 +204,7 @@ getters: {
     addAction() {
       const gameData = useGameDataStore()
       const newId = this.generateId()
-      this.actionBuffListExpanded[newId] = true
+      this.actionBuffListExpanded[newId] = false
 
       this.activeTimeline.rotation.push({
         id: newId,
