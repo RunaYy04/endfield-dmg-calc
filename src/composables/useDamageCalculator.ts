@@ -173,9 +173,8 @@ const totalSubWillpower = computed(() => {
     const currentFragility = sumStaticAttribute('fragility').value + sumBuff('fragility') + skill.fragility;
     const currentAmplification = sumStaticAttribute('amplification').value + sumBuff('amplification') + skill.amplification;
     const currentOriginiumArtBonus = sumStaticAttribute('originiumArtBonus').value + sumBuff('originiumArtBonus');
-    const currentComboMultiplier = 
-    // sumStaticAttribute('comboMultiplier').value 
-    + sumBuff('comboMultiplier');
+    const currentComboMultiplier = sumBuff('comboMultiplier');
+    const currentResistancePen = sumBuff('resistancePen') + skill.resistancePen;
 
     // Step B: 百分比加成后攻击力 = 白字 * (1 + 百分比攻击之和)
     const stepB_PercentScaled = stepA_BaseAttack.value * (1 + currentPercentAttack);
@@ -226,6 +225,10 @@ const totalSubWillpower = computed(() => {
       currentFragility,
       currentAmplification,
       currentOriginiumArtBonus,
+
+      // 连击加成 & 抗性穿透（数显用）
+      currentComboMultiplier,
+      currentResistancePen,
 
       // 核心链路数据
       stepA_BaseAttack: stepA_BaseAttack.value,

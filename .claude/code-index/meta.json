@@ -1,0 +1,17 @@
+{
+  "lastCommit": "fdf030d5e1b5ef5b856eecafab245fc4666a0bca",
+  "lastMtimes": {
+    "scripts\\convert.js": 1776047335243.4128,
+    "src\\composables\\useDamageCalculator.ts": 1779953929679.3655,
+    "src\\constants\\appVersion.ts": 1780752332210.141,
+    "src\\main.ts": 1776503116717.6226,
+    "src\\router\\index.ts": 1776048738218.5703,
+    "src\\stores\\useCalculatorStore.ts": 1776503080227.5186,
+    "src\\stores\\useGameDataStore.ts": 1776503046165.4084,
+    "src\\types\\index.ts": 1776047335269.7317,
+    "vite.config.ts": 1774836872332.2566
+  },
+  "totalFiles": 9,
+  "totalSymbols": 143,
+  "lastIndexed": 1780815635748
+}

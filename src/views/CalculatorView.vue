@@ -168,13 +168,78 @@
 
             <div class="action-result-dashboard">
               <div class="result-mini-stats">
-                <span>面板攻击: <strong>{{ Math.floor(rotationResults[index]?.finalAttack || 0) }}</strong></span>
-                <n-divider vertical />
-                <span>暴击率: <strong>{{ ((rotationResults[index]?.currentCritRate || 0) * 100).toFixed(1)
-                    }}%</strong></span>
-                <n-divider vertical />
-                <span>暴击伤害: <strong>{{ ((rotationResults[index]?.currentCritDamage || 0) * 100).toFixed(1)
-                    }}%</strong></span>
+                <div class="stat-detail-grid">
+                  <div class="stat-item">
+                    <span class="stat-d-label">倍率</span>
+                    <span class="stat-d-value">{{ ((rotationResults[index]?.skill.multiplier || 0) * 100).toFixed(2)
+                    }}%</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-d-label">攻击加成</span>
+                    <span class="stat-d-value">{{ ((rotationResults[index]?.currentPercentAttack || 0) * 100).toFixed(2)
+                    }}%</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-d-label">即时攻击</span>
+                    <span class="stat-d-value">{{ Math.floor(rotationResults[index]?.finalAttack || 0) }}</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-d-label">暴击</span>
+                    <span class="stat-d-value">{{ ((rotationResults[index]?.currentCritRate || 0) * 100).toFixed(2)
+                    }}%</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-d-label">暴击伤害</span>
+                    <span class="stat-d-value">{{ ((rotationResults[index]?.currentCritDamage || 0) * 100).toFixed(2)
+                    }}%</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-d-label">伤害加成</span>
+                    <span class="stat-d-value">{{ ((rotationResults[index]?.currentDmgBonus || 0) * 100).toFixed(2)
+                    }}%</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-d-label">源石技艺</span>
+                    <span class="stat-d-value">{{ (rotationResults[index]?.currentOriginiumArtBonus || 0).toFixed(2)
+                    }}</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-d-label">增幅加成</span>
+                    <span class="stat-d-value">{{ ((rotationResults[index]?.currentAmplification || 0) * 100).toFixed(2)
+                    }}%</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-d-label">脆弱加成</span>
+                    <span class="stat-d-value">{{ ((rotationResults[index]?.currentFragility || 0) * 100).toFixed(2)
+                    }}%</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-d-label">易伤加成</span>
+                    <span class="stat-d-value">{{ ((rotationResults[index]?.currentVulnerability || 0) * 100).toFixed(2)
+                    }}%</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-d-label">失衡易伤</span>
+                    <span class="stat-d-value">{{ ((rotationResults[index]?.skill.staggerVuln || 0) * 100).toFixed(2)
+                    }}%</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-d-label">抗性</span>
+                    <span class="stat-d-value">{{ ((rotationResults[index]?.currentResistancePen || 0) * 100).toFixed(2)
+                    }}%</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-d-label">连击加成</span>
+                    <span class="stat-d-value">{{ ((rotationResults[index]?.currentComboMultiplier || 0) *
+                      100).toFixed(2)
+                    }}%</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-d-label">特殊加成</span>
+                    <span class="stat-d-value">{{ (rotationResults[index]?.skill.specialMultiplier || 0).toFixed(2)
+                    }}×</span>
+                  </div>
+                </div>
               </div>
 
               <div class="result-highlight-box">
@@ -591,8 +656,33 @@ const activeAnchor = ref('')
 .result-mini-stats {
   font-size: 0.85rem;
   color: #64748b;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.stat-detail-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+
+.stat-item {
   display: flex;
   align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.stat-d-label {
+  color: #94a3b8;
+  font-size: 0.8rem;
+}
+
+.stat-d-value {
+  color: #1e293b;
+  font-weight: 700;
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
 }
 
 .result-mini-stats strong {
