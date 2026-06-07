@@ -647,23 +647,25 @@ const activeAnchor = ref('')
 .action-result-dashboard {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   padding: 16px;
   background: #fff;
   border-top: 1px solid #f1f5f9;
+  gap: 16px;
 }
 
 .result-mini-stats {
   font-size: 0.85rem;
   color: #64748b;
-  width: 100%;
-  overflow-x: auto;
+  flex: 1;
+  min-width: 0;
+  overflow: visible;
 }
 
 .stat-detail-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 12px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px 10px;
 }
 
 .stat-item {
@@ -671,6 +673,7 @@ const activeAnchor = ref('')
   align-items: center;
   gap: 4px;
   white-space: nowrap;
+  overflow: hidden;
 }
 
 .stat-d-label {
